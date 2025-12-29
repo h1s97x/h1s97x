@@ -44,7 +44,12 @@ jobs:
           committer_gist: ${{ secrets.GIST }}
           plugin_achievements: yes
           plugin_achievements_display: compact
+          plugin_achievements_only: >-
+            polyglot, stargazer, sponsor, deployer, member, maintainer, developer,
+            scripter, packager, explorer, infographile, manager
           plugin_fortune: yes
+          plugin_achievements_threshold: X
+
 
       - name: 🦑 General
         if: ${{ success() || failure() }}
@@ -70,21 +75,3 @@ jobs:
           plugin_notable: yes
           plugin_discussions: yes
           
-      - name: 🦑 Splatoon
-        uses: lowlighter/metrics@latest
-        if: ${{ success() || failure() }}
-        with:
-          filename: splatoon.svg
-          token: ${{ secrets.METRICS_TOKEN }}
-          base: ""
-          output_action: gist
-          committer_gist: ${{ secrets.GIST }}
-          plugin_splatoon: yes
-          plugin_splatoon_token: ${{ secrets.SPLATOON_TOKEN }}
-          plugin_splatoon_statink: yes
-          plugin_splatoon_statink_token: ${{ secrets.SPLATOON_STATINK_TOKEN }}
-          plugin_splatoon_sections: salmon-run
-          plugin_splatoon_salmon_limit: 2
-          extras_css: |
-            h2 { display: none !important; }
-            .match:not(:last-child) { padding-bottom: 4px; }
