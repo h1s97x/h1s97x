@@ -1,19 +1,38 @@
 name: Metrics  # 工作流名称
 on:
-  # 定时触发：每天 00:00（UTC 时间）自动运行 
-  schedule: [{cron: "0 0 * * *"}]  
+  # 定时触发：每天 00:00（UTC 时间）自动运行
+  schedule: [{cron: "0 0 * * *"}]
   # 支持手动触发（在 GitHub 仓库的 Actions 标签页手动运行）
-  workflow_dispatch:  
+  workflow_dispatch:
 jobs:
   # 任务名称
   metrics:
     # 运行环境：Ubuntu 最新版
     runs-on: ubuntu-latest
-    environment: 
+    environment:
       name: production
     permissions:
       contents: write
     steps:
+      - name: 🦑 General
+        if: ${{ success() || failure() }}
+        uses: lowlighter/metrics@latest
+        with:
+          filename: general.svg
+          token: ${{ secrets.METRICS_TOKEN }}
+          base: header
+          base_indepth: yes
+          config_order: base.header, isocalendar, languages, notable, discussions, topics
+          output_action: gist
+          committer_gist: ${{ secrets.GIST }}
+          plugin_isocalendar: yes
+          plugin_languages: yes
+          plugin_topics: yes
+          plugin_topics_limit: 0
+          plugin_topics_mode: icons
+          plugin_notable: yes
+          plugin_discussions: yes
+
       - name: 🦑 Medias
         if: ${{ success() || failure() }}
         uses: lowlighter/metrics@latest
@@ -41,34 +60,4 @@ jobs:
           committer_gist: ${{ secrets.GIST }}
           plugin_achievements: yes
           plugin_achievements_display: compact
-          plugin_achievements_only: >-
-            polyglot, stargazer, sponsor, deployer, member, maintainer, developer,
-            scripter, packager, explorer, infographile, manager
           plugin_fortune: yes
-          plugin_achievements_threshold: X
-
-
-      - name: 🦑 General
-        if: ${{ success() || failure() }}
-        uses: lowlighter/metrics@latest
-        with:
-          filename: general.svg
-          token: ${{ secrets.METRICS_TOKEN }}
-          base: header
-          base_indepth: yes
-          config_order: base.header, isocalendar, languages, notable, discussions, topics
-          output_action: gist
-          committer_gist: ${{ secrets.GIST }}
-          plugin_isocalendar: yes
-          plugin_languages: yes
-          plugin_languages_ignored: html, css, tex, less, dockerfile, makefile, qmake, lex, cmake, shell, gnuplot, vue, scala, c, c++, python, ejs
-          plugin_languages_details: lines, bytes-size, percentage
-          plugin_languages_sections: most-used, recently-used
-          plugin_languages_indepth: yes
-          plugin_languages_limit: 2
-          plugin_topics: yes
-          plugin_topics_limit: 0
-          plugin_topics_mode: icons
-          plugin_notable: yes
-          plugin_discussions: yes
-          
