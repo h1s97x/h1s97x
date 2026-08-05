@@ -51,11 +51,12 @@ jobs:
         with:
           filename: achievements.svg
           token: ${{ secrets.METRICS_TOKEN }}
-          base: ""
+          base: header
           output_action: gist
           committer_gist: ${{ secrets.GIST }}
           plugin_achievements: yes
           plugin_achievements_display: compact
+          plugin_achievements_limit: 5
 
       - name: 🦑 Steam
         if: ${{ success() || failure() }}
