@@ -1,0 +1,25 @@
+name: Update Space Shooter Game
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # Daily at 3am UTC (避开 metrics.yml 的 0点)
+  workflow_dispatch:      # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  update-game:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2  # 关键！action 需要至少 2 层 commit 历史来判断是否 amend
+
+      - uses: czl9707/gh-space-shooter@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          username: 'h1s97x'
+          output-path: 'game.gif'
+          strategy: 'random'
+          fps: 40
