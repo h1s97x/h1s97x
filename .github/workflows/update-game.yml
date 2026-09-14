@@ -1,40 +1,26 @@
-name: Update Space Shooter Game
+name: Pixel Pulverizer
 
 on:
   schedule:
     - cron: '0 3 * * *'  # Daily at 3am UTC (避开 metrics.yml 的 0点)
-  workflow_dispatch:      # Allow manual trigger
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  update-game:
+  pulverize:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2  # 保留 2 层用于 amend 判断
 
-      - name: 🐍 Setup Python
-        run: pip3 install --quiet pillow
-
-      - name: 🎬 生成太空射击游戏 GIF
-        run: |
-          python3 tools/gh_space_shooter.py h1s97x \
-            -o game.gif \
-            --fps 12 \
-            --max-frame 300 \
-            -s random
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 📦 提交更新（仅当 game.gif 有变化）
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add game.gif
-          if git diff --cached --quiet; then
-            echo "ℹ️  game.gif 没有变化，跳过 commit"
-          else
-            git commit -m "feat(game): update space-shooter gif 🚀"
-            git push
-          fi
+      - uses: h1s97x/gh-pixel-pulverizer@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          username: h1s97x
+          output-path: game.gif
+          strategy: random
+          fps: 40
+          max-frame: 300
