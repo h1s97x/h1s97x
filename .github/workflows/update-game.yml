@@ -13,13 +13,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 2  # 关键！action 需要至少 2 层 commit 历史来判断是否 amend
 
-      - uses: czl9707/gh-space-shooter@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          username: 'h1s97x'
-          output-path: 'game.gif'
-          strategy: 'random'
-          fps: 40
+      - name: 🐍 Setup Python
+        run: pip3 install --quiet pillow
+
+      - name: 🎬 生成太空射击游戏 GIF
+        run: |
+          python3 tools/gh_space_shooter.py h1s97x \
+            -o game.gif \
+            --fps 12 \
+            --max-frame 300 \
+            -s random
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 📦 提交更新（仅当 game.gif 有变化）
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add game.gif
+          if git diff --cached --quiet; then
+            echo "ℹ️  game.gif 没有变化，跳过 commit"
+          else
+            git commit -m "feat(game): update space-shooter gif 🚀"
+            git push
+          fi
