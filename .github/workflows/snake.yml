@@ -1,0 +1,31 @@
+name: Snake
+
+on:
+  schedule:
+    - cron: "0 6 * * *" # 每天 6:00 UTC（避开 metrics 0点 / game 3点）
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: generate snake svg
+        uses: h1s97x/gh-snake@main
+        with:
+          github_user_name: h1s97x
+          outputs: |
+            snake.svg
+            snake-dark.svg?palette=github-dark
+
+      - name: commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add snake.svg snake-dark.svg
+          git commit -m "chore: update contribution snake" || exit 0
+          git push

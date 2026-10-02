@@ -10,6 +10,14 @@
 [<img align="right" width="390" alt="🦑" src="https://gist.githubusercontent.com/h1s97x/1b64184fcfdbc564141eb8fe11433154/raw/achievements.svg">](#)
 ---
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="snake-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="snake.svg">
+    <img alt="github contribution snake" src="snake.svg">
+  </picture>
+</p>
+
 <details>
   <summary>🚀 点击开启我的 GitHub 太空射击小游戏</summary>
   <br>
